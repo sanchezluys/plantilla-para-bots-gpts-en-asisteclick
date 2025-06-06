@@ -10,7 +10,7 @@
 
 AsisteClick es una plataforma de atención al cliente que permite crear chatbots avanzados utilizando la tecnología de OpenAI. Esta plataforma unifica múltiples canales de atención como WhatsApp, Facebook, Instagram, web y Telegram, facilitando la gestión de interacciones con los clientes.
 
-### Características clave de AsisteClick:
+### Características clave de AsisteClick
 
 1. **Integración con OpenAI**: Utiliza la API de OpenAI para aprovechar modelos avanzados de lenguaje como GPT-4o.
 2. **Unificación de Canales**: Permite gestionar conversaciones a través de diferentes plataformas como WhatsApp, Facebook, Instagram, web y Telegram desde un solo lugar.
@@ -73,6 +73,32 @@ La plataforma AsisteClick maneja varias variables internas que permiten personal
 - `skill.llm.message`: El mensaje del LLM: texto
 - `skill.llm.tags`: Las etiquetas asociadas: texto
 
+### Bases de Conocimiento KB
+
+Son archivos que se cargan de manera manual en la plataforma, en el apartado 'Bases de conocimiento ChatGPT', pueden de los siguientes tipos:
+
+- Texto Libre
+- Pregunta / Respuesta
+- Archivo PDF
+- Archivo Word
+- Archivo Excel
+- Página Web
+- Video de Youtube
+
+Cada Archivo tiene en opciones avanzadas por defecto:
+
+- 'Chunk Size': 400
+- 'Chunk Overlap': 20
+
+En plataforma al cargarse un archivo se puede ver:
+
+1. 'Tipo': el tipo de archivo ejemplo TEXT
+2. 'Titulo': el titulo del archivo que lo determina la propio sistema no es editable
+3. 'Creado el': la fecha de creación
+4. 'Modificado el': la fecha de modificación
+
+Los archivos se cargan como tipo Texto Libre pero en formato Marckdown para crear un orden y estructura
+
 ### Variables personalizadas
 
 Para personalizar las interacciones, AsisteClick permite definir variables personalizadas que pueden ser utilizadas en los prompts y respuestas. Estas variables pueden incluir información específica del cliente, contexto de la conversación o cualquier otro dato relevante que mejore la experiencia del usuario.
@@ -86,6 +112,12 @@ Tipos de datos que se pueden manejar en AsisteClick:
 - Teléfono
 - Dirección web
 - Archivo
+
+Variables globales personalizadas recomendadas al crear un bot indiferentemente del tipo de negocio.
+
+- 'fecha_actual': contiene la fecha actual: date
+- 'hora_actual': contiene la hora actual: date
+- 'dia_actual': contiene el nombre del dia actual: text
 
 ### Bloques de Interacción
 
@@ -122,10 +154,10 @@ Completa los parámetros de ejecución de LLM como:
 3. **Modelo**: Selecciona el modelo de LLM que deseas utilizar, como GPT-4o, 4o mini,  4.1, 4.1 mini
 4. **Secuencia de Interpretación**: Define cómo se interpretarán las respuestas del LLM. NLP->LLM (best), LLM->NLP, NLP only, LLM only. Determina la secuencia de ejecución del chatbot al recibir un mensaje del cliente. NLP > LLM significa que primero se ejecuta el procesamiento de lenguaje natural para determinar si se debe ejecutar alguna interacción a partir del entrenamiento supervisado y luego, en caso que ningúna interacción sea activada, ejecutará el procesamiento por LLM.
 5. **Temperatura**: Ajusta la temperatura del modelo para controlar la creatividad de las respuestas. Un valor más alto (ej. 0.8) genera respuestas más creativas, mientras que un valor más bajo (ej. 0.2) produce respuestas más conservadoras.
-6. **Personalización**: Define el prompt del bot, que es el contexto o instrucciones que guiarán al modelo en sus respuestas. Por ejemplo, "Eres un asistente de atención al cliente especializado en productos electrónicos". Prompt utilizado para enviar la consulta al LLM. Debes ser lo más específico posible para obtener una respuesta precisa. Puedes incluir variables de contexto como {{name}} o cualquier otra variable que se haya definido en el sistema.
+6. **Personalización**: Define el prompt del bot; el texto se escribe en formato marckdown para que tenga estructura y orden, que es el contexto o instrucciones que guiarán al modelo en sus respuestas. Por ejemplo, "Eres un asistente de atención al cliente especializado en productos electrónicos". Prompt utilizado para enviar la consulta al LLM. Debes ser lo más específico posible para obtener una respuesta precisa. Puedes incluir variables de contexto como {{name}} o cualquier otra variable que se haya definido en el sistema.
 7. **Asignación Inteligente de Memoria**: Configura cómo el modelo debe manejar la memoria de la conversación, permitiendo que recuerde información relevante a lo largo del chat. Determina asignación de valores de la memoria del bot en base a condiciones. Por ejemplo: - Si la respuesta del LLM es que no tiene información suficiente para responder, asigna el valor 'no' a la variable de 'contexto'. Para incluir varias asignaciones ponla una debajo de la otra.
 8. **Asignación Inteligente de Etiquetas**: Define cómo el modelo debe asignar etiquetas a las interacciones, facilitando la categorización y búsqueda de conversaciones. Determina las etiquetas que se asignarán a la respuesta generada por el LLM. Por ejemplo: - Si la respuesta del LLM es que no tiene información suficiente para responder, asigna la etiqueta 'no_informacion'. Para incluir varias etiquetas ponlas una debajo de la otra.
-9. **Asignación de Bases de Conocimiento**: Selecciona las bases de conocimiento que el modelo utilizará para buscar información relevante. Estas bases de conocimiento son archivos .md que se cargan en la plataforma y pueden contener información útil para responder preguntas frecuentes o proporcionar detalles específicos sobre productos o servicios. Selecciona una o más bases de conocimiento para que el LLM pueda utilizarlas en la generación de respuestas. La respuesta a la pregunta del cliente será generada por el LLM en base a la información de las bases de conocimiento seleccionadas.
+9. **Asignación de Bases de Conocimiento**: Selecciona las bases de conocimiento que el modelo utilizará para buscar información relevante. Estas bases de conocimiento son archivos que se cargan en la plataforma y pueden contener información útil para responder preguntas frecuentes o proporcionar detalles específicos sobre productos o servicios. Selecciona una o más bases de conocimiento para que el LLM pueda utilizarlas en la generación de respuestas. La respuesta a la pregunta del cliente será generada por el LLM en base a la información de las bases de conocimiento seleccionadas.
 
 #### Pestaña de Bot Responde
 
@@ -145,8 +177,18 @@ Se compone de bloques que permiten definir cómo el bot responderá a las pregun
 
 ## Formato de salida para el prompt
 
+- El prompt debe ser en formato marckdown
+- Debe tener las partes principales indispensables que todo prompt debe tener basandose en estudios y fuentes confiables de gpt con openAI assistant.
+- Debe tener una seccion de 'Flujo Principal' donde se define el comportamiento y tratamiento de cada conversacion
+
 ## Formato de salida para las bases de conocimiento
 
+- Debe contener las secciones indispensables y minimas que toda kb debe contener sin importar el tipo de negocio.
+  
 ## Formato de salida para las variables inteligentes
 
+- Debe contener las variables minimas que todo bot debe tener para operar de manera eficiente sin importar el tipo de negocio
+
 ## Formato de salida para las etiquetas inteligentes
+
+- Dependiendo del tipo de negocio, el prompt y la kb se deben crear etiquetas que puedan ser usadas para generar reportes que sean útiles para gerentes de la empresa.
